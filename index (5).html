@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HERMES ANALYZER v4.0 - Ethical Hacker Toolkit</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<style>
+:root{
+  --bg:#020407;--sf:#080d12;--sf2:#0d1520;--sf3:#111b2a;
+  --br:#1a2a3a;--brb:#1e3a4a;
+  --a:#00e5ff;--a2:#ff6b35;--a3:#39ff14;--a4:#ff3366;--a5:#b24bff;
+  --tx:#d4eaf7;--dm:#5a7a95;--md:#8aacbf;
+  --wn:#ffb800;--dg:#ff3344;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden;}
+body::before{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,229,255,.01) 2px,rgba(0,229,255,.01) 4px);pointer-events:none;z-index:9999;}
+body::after{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,229,255,.02) 1px,transparent 1px),linear-gradient(90deg,rgba(0,229,255,.02) 1px,transparent 1px);background-size:40px 40px;pointer-events:none;z-index:0;}
+.wrap{max-width:1080px;margin:0 auto;padding:20px 12px 80px;position:relative;z-index:1;}
+
+/* HEADER */
+.hdr{text-align:center;margin-bottom:16px;padding:22px 16px;background:linear-gradient(135deg,rgba(0,229,255,.05),rgba(255,107,53,.05));border:1px solid var(--brb);border-radius:18px;position:relative;overflow:hidden;}
+.hdr::before{content:'';position:absolute;top:0;left:-100%;width:200%;height:2px;background:linear-gradient(90deg,transparent,var(--a),var(--a2),transparent);animation:scan 3s linear infinite;}
+@keyframes scan{to{left:100%}}
+.logo{font-size:22px;font-weight:900;font-family:'IBM Plex Mono',monospace;background:linear-gradient(135deg,var(--a),var(--a2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px;}
+
+/* API KEY INPUT */
+.key-bar{display:flex;gap:8px;align-items:center;justify-content:center;margin-top:10px;flex-wrap:wrap;}
+.key-inp{background:var(--sf2);border:1px solid var(--brb);color:var(--tx);padding:7px 12px;border-radius:20px;font-family:'IBM Plex Mono',monospace;font-size:11px;width:280px;outline:none;direction:ltr;}
+.key-btn{background:rgba(0,229,255,.1);border:1px solid var(--a);color:var(--a);padding:7px 14px;border-radius:20px;font-family:'Cairo',sans-serif;font-size:12px;cursor:pointer;}
+.key-status{font-family:'IBM Plex Mono',monospace;font-size:11px;}
+
+/* MODEL SELECT */
+.mdl-sel{background:var(--sf2);border:1px solid var(--brb);color:var(--md);padding:5px 10px;border-radius:20px;font-size:11px;font-family:'IBM Plex Mono',monospace;cursor:pointer;}
+
+/* TABS */
+.tabs{display:flex;gap:3px;margin-bottom:14px;background:var(--sf);border:1px solid var(--br);border-radius:12px;padding:4px;flex-wrap:wrap;}
+.tb{flex:1;min-width:85px;padding:7px 6px;background:transparent;border:1px solid transparent;color:var(--dm);font-family:'Cairo',sans-serif;font-size:11px;font-weight:700;border-radius:8px;cursor:pointer;transition:.2s;white-space:nowrap;text-align:center;}
+.tb:hover{color:var(--tx);background:var(--sf2);}
+.tb.on{background:linear-gradient(135deg,rgba(0,229,255,.15),rgba(255,107,53,.1));border-color:var(--brb);color:var(--a);}
+.pn{display:none;}.pn.on{display:block;}
+
+/* CARD */
+.card{background:var(--sf);border:1px solid var(--br);border-radius:16px;padding:18px;margin-bottom:14px;}
+.ct{font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--a);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;border-bottom:1px solid var(--br);padding-bottom:8px;}
+
+/* INPUTS */
+textarea,select,input[type=text],input[type=password]{width:100%;background:var(--sf2);border:1px solid var(--br);color:var(--tx);padding:9px 12px;border-radius:8px;font-family:'Cairo',sans-serif;font-size:13px;outline:none;transition:.2s;}
+textarea:focus,select:focus,input:focus{border-color:var(--brb);}
+textarea{resize:vertical;}select{cursor:pointer;}
+label.lbl{display:block;font-size:11px;color:var(--dm);margin-bottom:5px;font-family:'IBM Plex Mono',monospace;}
+.fg{margin-bottom:12px;}
+
+/* BUTTONS */
+.abtn{width:100%;padding:12px;background:linear-gradient(135deg,rgba(0,229,255,.15),rgba(255,107,53,.1));border:1px solid var(--brb);color:var(--a);font-size:13px;font-weight:800;font-family:'Cairo',sans-serif;border-radius:10px;cursor:pointer;transition:.3s;}
+.abtn:hover:not(:disabled){box-shadow:0 0 16px rgba(0,229,255,.2);}
+.abtn:disabled{opacity:.5;cursor:not-allowed;}
+.abtn.red{background:linear-gradient(135deg,rgba(255,51,102,.15),rgba(255,107,53,.1));border-color:var(--a4);color:var(--a4);}
+.abtn.grn{background:linear-gradient(135deg,rgba(57,255,20,.12),rgba(0,229,255,.08));border-color:var(--a3);color:var(--a3);}
+.abtn.pur{background:linear-gradient(135deg,rgba(178,75,255,.15),rgba(0,229,255,.08));border-color:var(--a5);color:var(--a5);}
+.sbtn{padding:5px 11px;background:var(--sf2);border:1px solid var(--br);color:var(--md);font-size:11px;font-family:'Cairo',sans-serif;border-radius:20px;cursor:pointer;transition:.2s;white-space:nowrap;}
+.sbtn:hover{border-color:var(--a);color:var(--a);}
+
+/* QUICK ACTIONS */
+.qrow{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+
+/* RESULT */
+.ra{margin-top:14px;display:none;}
+.rh{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:6px;}
+.rtl{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--a);}
+.pg{display:none;margin:8px 0;}
+.pb{height:3px;background:var(--br);border-radius:2px;overflow:hidden;}
+.pf{height:100%;background:linear-gradient(90deg,var(--a),var(--a2));animation:pa 1.4s ease infinite;}
+@keyframes pa{0%{width:0%;margin-left:0}50%{width:60%;margin-left:20%}100%{width:0%;margin-left:100%}}
+.mdo{direction:rtl;line-height:1.85;font-size:13px;color:var(--tx);padding:16px;background:#020810;border-radius:10px;border:1px solid var(--br);max-height:520px;overflow-y:auto;}
+.mdo::-webkit-scrollbar{width:4px;}.mdo::-webkit-scrollbar-thumb{background:var(--br);border-radius:3px;}
+.mdo h1,.mdo h2,.mdo h3{color:var(--a);margin:12px 0 5px;font-family:'Cairo',sans-serif;}
+.mdo h2{color:var(--a2);}.mdo h3{color:var(--a3);font-size:13px;}
+.mdo code{background:rgba(0,229,255,.08);padding:1px 6px;border-radius:4px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--a2);}
+.mdo pre{direction:ltr;margin:8px 0;padding:12px;background:#010608;border-radius:8px;border:1px solid var(--br);overflow-x:auto;}
+.mdo pre code{background:transparent;padding:0;font-size:11px;}
+.mdo ul,.mdo ol{padding-right:18px;color:var(--md);}
+.mdo li{margin:3px 0;font-size:13px;}
+.mdo blockquote{border-right:3px solid var(--a);padding-right:10px;color:var(--dm);margin:6px 0;}
+.mdo strong{color:var(--a);}
+.mdo hr{border:none;border-top:1px solid var(--br);margin:10px 0;}
+.mdo table{width:100%;border-collapse:collapse;font-size:11px;margin:8px 0;}
+.mdo th{background:var(--sf2);color:var(--a);padding:6px;text-align:right;border:1px solid var(--br);}
+.mdo td{padding:5px;border:1px solid var(--br);color:var(--md);}
+.mdo p{margin:5px 0;}
+
+/* CHECKLIST */
+.ckl{display:grid;grid-template-columns:1fr 1fr;gap:6px;}
+.ci{display:flex;align-items:center;gap:7px;padding:6px 10px;background:var(--sf2);border:1px solid var(--br);border-radius:7px;cursor:pointer;}
+.ci input{accent-color:var(--a);cursor:pointer;}
+.ci label{color:var(--md);font-size:11px;cursor:pointer;margin:0;font-family:'IBM Plex Mono',monospace;}
+
+/* GRID */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;}
+
+/* TIP */
+.tip{padding:9px 12px;background:rgba(0,229,255,.04);border:1px solid rgba(0,229,255,.12);border-radius:8px;font-size:12px;color:var(--md);line-height:1.6;margin-bottom:12px;}
+.tipw{padding:9px 12px;background:rgba(255,184,0,.04);border:1px solid rgba(255,184,0,.18);border-radius:8px;font-size:12px;color:var(--md);line-height:1.6;margin-bottom:12px;}
+.tipr{padding:9px 12px;background:rgba(255,51,102,.04);border:1px solid rgba(255,51,102,.18);border-radius:8px;font-size:12px;color:var(--md);line-height:1.6;margin-bottom:12px;}
+
+/* HISTORY */
+.hl{display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto;}
+.hi{padding:7px 11px;background:var(--sf2);border:1px solid var(--br);border-radius:7px;font-size:11px;display:flex;align-items:center;gap:8px;}
+.ht{font-family:'IBM Plex Mono',monospace;color:var(--a);font-size:10px;white-space:nowrap;}
+.hx{flex:1;color:var(--md);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.hm{font-family:'IBM Plex Mono',monospace;color:var(--dm);font-size:10px;white-space:nowrap;}
+
+/* STATUS */
+.sb{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--sf2);border:1px solid var(--br);border-radius:8px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dm);margin-bottom:12px;}
+.sd{width:6px;height:6px;border-radius:50%;background:var(--a3);animation:pu 2s infinite;}
+@keyframes pu{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* NOTIF */
+.notif{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(18px);background:var(--sf);border:1px solid var(--a3);color:var(--a3);padding:8px 20px;border-radius:20px;font-family:'IBM Plex Mono',monospace;font-size:11px;opacity:0;transition:.3s;z-index:99999;pointer-events:none;}
+.notif.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* TOOL CARDS */
+.tool-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-bottom:12px;}
+.tool-card{background:var(--sf2);border:1px solid var(--br);border-radius:10px;padding:12px;cursor:pointer;transition:.2s;text-align:center;}
+.tool-card:hover{border-color:var(--a);background:rgba(0,229,255,.05);}
+.tool-icon{font-size:1.6rem;margin-bottom:6px;}
+.tool-name{font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--a);margin-bottom:3px;}
+.tool-desc{font-size:10px;color:var(--dm);}
+
+/* SOCIAL CARDS */
+.social-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:12px;}
+.soc-card{border:1px solid var(--br);border-radius:10px;padding:12px;cursor:pointer;transition:.2s;text-align:center;}
+.soc-card:hover{transform:translateY(-2px);box-shadow:0 4px 15px rgba(0,0,0,.3);}
+.soc-fb{background:rgba(24,119,242,.08);border-color:rgba(24,119,242,.3);}
+.soc-ig{background:rgba(225,48,108,.08);border-color:rgba(225,48,108,.3);}
+.soc-tw{background:rgba(29,161,242,.08);border-color:rgba(29,161,242,.3);}
+.soc-yt{background:rgba(255,0,0,.08);border-color:rgba(255,0,0,.3);}
+.soc-tt{background:rgba(0,0,0,.3);border-color:rgba(255,255,255,.1);}
+
+@media(max-width:520px){
+  .tabs{flex-direction:column;}
+  .tb{min-width:auto;text-align:right;}
+  .g2,.g3,.ckl{grid-template-columns:1fr;}
+  .tool-grid{grid-template-columns:repeat(2,1fr);}
+  .social-grid{grid-template-columns:repeat(2,1fr);}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- HEADER -->
+<div class="hdr">
+  <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:4px;">
+    <div class="logo">⬡ HERMES ANALYZER</div>
+    <span style="background:rgba(57,255,20,.1);border:1px solid #39ff14;color:#39ff14;font-size:9px;padding:2px 7px;border-radius:20px;font-family:monospace;">v4.0 ETH</span>
+  </div>
+  <p style="color:var(--dm);font-size:12px;margin-bottom:8px;">منصة الهكر الأخلاقي المتكاملة — Ethical Hacker Toolkit</p>
+  <div class="key-bar">
+    <input class="key-inp" type="password" id="apiKey" placeholder="أدخل OpenRouter API Key هنا..." oninput="saveKey()">
+    <select class="mdl-sel" id="mdlSel">
+      <option value="meta-llama/llama-3.3-70b-instruct:free">🆓 Llama 3.3 70B</option>
+      <option value="deepseek/deepseek-r1:free">🆓 DeepSeek R1</option>
+      <option value="qwen/qwen3-235b-a22b:free">🆓 Qwen3 235B</option>
+      <option value="mistralai/mistral-7b-instruct:free">🆓 Mistral 7B</option>
+      <option value="google/gemma-3-27b-it:free">🆓 Gemma 3 27B</option>
+      <option value="anthropic/claude-3.5-sonnet">💎 Claude 3.5</option>
+      <option value="openai/gpt-4o">💎 GPT-4o</option>
+    </select>
+    <span class="key-status" id="kStat"></span>
+  </div>
+  <div style="margin-top:6px;font-size:10px;color:var(--a4);font-family:monospace;">🔐 ETHICAL USE ONLY — للاستخدام القانوني والتعليمي فقط</div>
+</div>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tb on"  onclick="T('code',this)">🔍 كود</button>
+  <button class="tb"     onclick="T('vuln',this)">🛡️ ثغرات</button>
+  <button class="tb"     onclick="T('url',this)">🌐 رابط</button>
+  <button class="tb"     onclick="T('search',this)">🔎 بحث</button>
+  <button class="tb"     onclick="T('exploit',this)">💥 استغلال</button>
+  <button class="tb"     onclick="T('social',this)">📱 سوشيال</button>
+  <button class="tb"     onclick="T('linux',this)">🐧 لينكس</button>
+  <button class="tb"     onclick="T('pentest',this)">⚡ Pentest</button>
+  <button class="tb"     onclick="T('report',this)">📋 تقرير</button>
+  <button class="tb"     onclick="T('hist',this)">📜 سجل</button>
+</div>
+
+<!-- ═══ TAB: CODE ═══ -->
+<div id="p-code" class="pn on">
+  <div class="card">
+    <div class="ct">🔍 تحليل الكود الأمني</div>
+    <div class="fg">
+      <label class="lbl">// ارفع ملف أو الصق الكود</label>
+      <div style="border:2px dashed var(--brb);border-radius:10px;padding:14px;text-align:center;cursor:pointer;margin-bottom:8px;" onclick="document.getElementById('fi').click()">
+        📁 اضغط لرفع ملف كود
+        <input type="file" id="fi" style="display:none" accept=".py,.js,.ts,.php,.c,.cpp,.java,.go,.rb,.sh,.sql,.json,.html,.cs,.rs" onchange="loadFile(this)">
+        <div id="fInfo" style="display:none;margin-top:5px;font-size:11px;color:var(--a3);font-family:monospace;"></div>
+      </div>
+      <textarea id="dcCode" style="height:85px;" placeholder="أو الصق الكود هنا..."></textarea>
+    </div>
+    <div class="g2">
+      <div class="fg">
+        <label class="lbl">// نوع التحليل</label>
+        <select id="atype">
+          <option value="general">🔎 تحليل شامل</option>
+          <option value="security">🛡️ فحص أمني عميق</option>
+          <option value="owasp">🔟 OWASP Top 10</option>
+          <option value="secrets">🔑 كشف المفاتيح والأسرار</option>
+          <option value="injection">💉 SQL/XSS/Command Injection</option>
+          <option value="auth">🔐 المصادقة والتفويض</option>
+          <option value="crypto">🔒 فحص التشفير</option>
+          <option value="logic">🧠 أخطاء المنطق التجاري</option>
+          <option value="explain">📖 شرح الكود</option>
+          <option value="improve">⚡ تحسين وإعادة هيكلة</option>
+        </select>
+      </div>
+      <div class="fg">
+        <label class="lbl">// تعليمات إضافية</label>
+        <textarea id="cInp" style="height:40px;" placeholder="ركز على..."></textarea>
+      </div>
+    </div>
+    <div class="fg">
+      <div class="qrow">
+        <button class="sbtn" onclick="sq('ابحث عن API keys و passwords مخزنة')">🔑 Secrets</button>
+        <button class="sbtn" onclick="sq('افحص ثغرات SQL Injection')">💉 SQLi</button>
+        <button class="sbtn" onclick="sq('افحص XSS بجميع أنواعها')">🕷 XSS</button>
+        <button class="sbtn" onclick="sq('ابحث عن RCE و Command Injection')">💥 RCE</button>
+        <button class="sbtn" onclick="sq('افحص المصادقة والجلسات وJWT')">🔐 Auth</button>
+        <button class="sbtn" onclick="sq('ابحث عن IDOR و Broken Access Control')">🚪 IDOR</button>
+        <button class="sbtn" onclick="sq('افحص CORS و CSP')">🌐 CORS</button>
+        <button class="sbtn" onclick="sq('ابحث عن Deserialization و XXE')">📦 XXE</button>
+      </div>
+    </div>
+    <button class="abtn" id="cBtn" onclick="runCode()">🔍 تشغيل التحليل الأمني</button>
+  </div>
+  <div class="ra" id="r-code">
+    <div class="rh"><span class="rtl">// نتيجة التحليل</span><div style="display:flex;gap:6px;"><button class="sbtn" onclick="cp('o-code')">📋 نسخ</button><button class="sbtn" onclick="ex('o-code','code')">💾 تصدير</button></div></div>
+    <div class="pg" id="pg-code"><div class="pb"><div class="pf"></div></div></div>
+    <div class="mdo" id="o-code"></div>
+  </div>
+</div>
+
+<!-- ═══ TAB: VULN ═══ -->
+<div id="p-vuln" class="pn">
+  <div class="card">
+    <div class="ct">🛡️ فاحص الثغرات الأمنية</div>
+    <div class="tipw"><strong style="color:var(--wn);">⚠️</strong> للاستخدام على الكود الذي تملك صلاحية اختباره قانونياً فقط.</div>
+    <div class="g2">
+      <div class="fg"><label class="lbl">// نوع التطبيق</label>
+        <select id="appT"><option>Web Application</option><option>Mobile App</option><option>API / REST</option><option>Desktop App</option><option>Microservice</option><option>Smart Contract</option></select>
+      </div>
+      <div class="fg"><label class="lbl">// اللغة</label>
+        <select id="langT"><option>Auto-detect</option><option>Python</option><option>JavaScript</option><option>PHP</option><option>Java</option><option>C/C++</option><option>Go</option><option>Ruby</option><option>C#</option><option>Solidity</option></select>
+      </div>
+    </div>
+    <div class="fg">
+      <label class="lbl">// اختر الثغرات</label>
+      <div class="ckl">
+        <div class="ci"><input type="checkbox" id="v1" checked><label for="v1">A01 — Broken Access Control</label></div>
+        <div class="ci"><input type="checkbox" id="v2" checked><label for="v2">A02 — Cryptographic Failures</label></div>
+        <div class="ci"><input type="checkbox" id="v3" checked><label for="v3">A03 — Injection</label></div>
+        <div class="ci"><input type="checkbox" id="v4" checked><label for="v4">A04 — Insecure Design</label></div>
+        <div class="ci"><input type="checkbox" id="v5" checked><label for="v5">A05 — Security Misconfig</label></div>
+        <div class="ci"><input type="checkbox" id="v6" checked><label for="v6">A06 — Vulnerable Components</label></div>
+        <div class="ci"><input type="checkbox" id="v7" checked><label for="v7">A07 — Auth Failures</label></div>
+        <div class="ci"><input type="checkbox" id="v8" checked><label for="v8">A08 — Data Integrity Failures</label></div>
+        <div class="ci"><input type="checkbox" id="v9" checked><label for="v9">A09 — Logging Failures</label></div>
+        <div class="ci"><input type="checkbox" id="v10" checked><label for="v10">A10 — SSRF</label></div>
+        <div class="ci"><input type="checkbox" id="v11"><label for="v11">XSS (All Types)</label></div>
+        <div class="ci"><input type="checkbox" id="v12"><label for="v12">IDOR & Mass Assignment</label></div>
+        <div class="ci"><input type="checkbox" id="v13"><label for="v13">Race Conditions</label></div>
+        <div class="ci"><input type="checkbox" id="v14"><label for="v14">XXE Injection</label></div>
+        <div class="ci"><input type="checkbox" id="v15"><label for="v15">Business Logic Flaws</label></div>
+        <div class="ci"><input type="checkbox" id="v16"><label for="v16">Hardcoded Secrets</label></div>
+      </div>
+    </div>
+    <div class="fg"><label class="lbl">// الكود</label><textarea id="vCode" style="height:110px;" placeholder="الصق الكود هنا..."></textarea></div>
+    <button class="abtn" id="vBtn" onclick="runVuln()">🛡️ بدء الفحص الأمني</button>
+  </div>
+  <div class="ra" id="r-vuln">
+    <div class="rh"><span class="rtl">// تقرير الثغرات</span><div style="display:flex;gap:6px;"><button class="sbtn" onclick="cp('o-vuln')">📋 نسخ</button><button class="sbtn" onclick="ex('o-vuln','vuln')">💾 تصدير</button></div></div>
+    <div class="pg" id="pg-vuln"><div class="pb"><div class="pf"></div></div></div>
+    <div class="mdo" id="o-vuln"></div>
+  </div>
+</div>
+
+<!-- ═══ TAB: URL ═══ -->
+<div id="p-url" class="pn">
+  <div class="card">
+    <div class="ct">🌐 فحص رابط / موقع</div>
+    <div class="tipw"><strong style="color:var(--wn);">⚠️</strong> للاستخدام على المواقع المصرح باختبارها فقط.</div>
+    <div class="fg"><label class="lbl">// رابط الموقع</label>
+      <div style="display:flex;gap:8px;">
+        <input type="text" id="urlInp" placeholder="https://example.com" dir="ltr" style="flex:1;">
+      </div>
+    </div>
+    <div class="fg"><label class="lbl">// الفحوصات</label>
+      <div class="ckl">
+        <div class="ci"><input type="checkbox" id="u1" checked><label for="u1">🔒 HTTPS / TLS</label></div>
+        <div class="ci"><input type="checkbox" id="u2" checked><label for="u2">🛡️ Security Headers</label></div>
+        <div class="ci"><input type="checkbox" id="u3" checked><label for="u3">🍪 Cookie Flags</label></div>
+        <div class="ci"><input type="checkbox" id="u4" checked><label for="u4">📂 Open Directories</label></div>
+        <div class="ci"><input type="checkbox" id="u5" checked><label for="u5">🔍 Tech Fingerprinting</label></div>
+        <div class="ci"><input type="checkbox" id="u6" checked><label for="u6">📧 Subdomain/Email Leak</label></div>
+        <div class="ci"><input type="checkbox" id="u7"><label for="u7">💉 SQLi Entry Points</label></div>
+        <div class="ci"><input type="checkbox" id="u8"><label for="u8">🕷 XSS Attack Surface</label></div>
+        <div class="ci"><input type="checkbox" id="u9"><label for="u9">🔄 Open Redirect</label></div>
+        <div class="ci"><input type="checkbox" id="u10"><label for="u10">📋 CORS Misconfig</label></div>
+        <div class="ci"><input type="checkbox" id="u11"><label for="u11">🤖 robots.txt / sitemap</label></div>
+        <div class="ci"><input type="checkbox" id="u12"><label for="u12">⚡ Rate Limiting</label></div>
+      </div>
+    </div>
+    <div class="fg"><label class="lbl">// معلومات إضافية</label><textarea id="urlExtra" style="height:60px;" placeholder="مثال: هل يوجد login page؟ API endpoints؟"></textarea></div>
+    <button class="abtn" id="urlBtn" onclick="runUrl()">🌐 بدء فحص الموقع</button>
+  </div>
+  <div class="ra" id="r-url">
+    <div class="rh"><span class="rtl">// نتيجة الفحص</span><div style="display:flex;gap:6px;"><button class="sbtn" onclick="cp('o-url')">📋 نسخ</button><button class="sbtn" onclick="ex('o-url','url')">💾 تصدير</button></div></div>
+    <div class="pg" id="pg-url"><div class="pb"><div class="pf"></div></div></div>
+    <div class="mdo" id="o-url"></div>
+  </div>
+</div>
+
+<!-- ═══ TAB: SEARCH ═══ -->
+<div id="p-search" class="pn">
+  <div class="card">
+    <div class="ct">🔎 Google Dorking وبحث المواقع المصابة</div>
+    <div class="tipw"><strong style="color:var(--wn);">⚠️</strong> للاستخدام التعليمي وBug Bounty فقط.</div>
+    <div class="g2">
+      <div class="fg"><label class="lbl">// نوع البحث</label>
+        <select id="sType" onchange="updateDork()">
+          <option value="dork">🔍 Dork مخصص</option>
+          <option value="login">🔐 صفحات Login مكشوفة</option>
+          <option value="admin">👤 لوحات Admin</option>
+          <option value="sqli">💉 نقاط SQLi محتملة</option>
+          <option value="upload">📂 Upload مكشوف</option>
+          <option value="config">⚙️ ملفات Config</option>
+          <option value="backup">💾 ملفات Backup</option>
+          <option value="camera">📷 كاميرات مكشوفة</option>
+          <option value="db">🗄️ قواعد بيانات</option>
+          <option value="api">🔌 API Keys مكشوفة</option>
+          <option value="error">❌ صفحات خطأ</option>
+          <option value="phpmyadmin">🐘 phpMyAdmin</option>
+        </select>
+      </div>
+      <div class="fg"><label class="lbl">// النطاق (اختياري)</label>
+        <input type="text" id="sDomain" placeholder=".sa أو site:example.com" dir="ltr">
+      </div>
+    </div>
+    <div class="fg" id="dorkDiv"><label class="lbl">// Dork مخصص</label><input type="text" id="dorkInp" placeholder='inurl:".php?id=" intitle:"Admin"' dir="ltr"></div>
+    <div class="fg"><label class="lbl" id="dorkHint" style="color:var(--a2);padding:7px 10px;background:rgba(255,107,53,.06);border:1px solid rgba(255,107,53,.18);border-radius:7px;display:block;"></label></div>
+    <div class="fg"><label class="lbl">// سؤالك أو ما تبحث عنه</label><textarea id="sQ" style="height:65px;" placeholder="مثال: ابحث عن مواقع WordPress قديمة في السعودية..."></textarea></div>
+    <div class="g2">
+      <button class="abtn" id="sBtn" onclick="runSearch()">🔎 توليد Dorks وتحليل</button>
+      <button class="abtn grn" onclick="openDork()">🚀 فتح في Google</button>
+    </div>
+  </div>
+  <div class="ra" id="r-search">
+    <div class="rh"><span class="rtl">// نتائج البحث</span><div style="display:flex;gap:6px;"><button class="sbtn" onclick="cp('o-search')">📋 نسخ</button><button class="sbtn" onclick="ex('o-search','dork')">💾 تصدير</button></div></div>
+    <div class="pg" id="pg-search"><div class="pb"><div class="pf"></div></div></div>
+    <div class="mdo" id="o-search"></div>
+  </div>
+</div>
+
+<!-- ═══ TAB: EXPLOIT ═══ -->
+<div id="p-exploit" class="pn">
+  <div class="card">
+    <div class="ct">💥 دليل استغلال الثغرات</div>
+    <div class="tipr"><strong style="color:var(--a4);">⚠️ للاستخدام الأخلاقي فقط:</strong> CTF / Bug Bounty / الأنظمة المصرح باختبارها.</div>
+    <div class="g2">
+      <div class="fg"><label class="lbl">// نوع الثغرة</label>
+        <select id="exType">
+          <option value="sqli">💉 SQL Injection</option>
+          <option value="xss">🕷 XSS</option>
+          <option value="rce">💥 RCE</option>
+          <option value="idor">🚪 IDOR</option>
+          <option value="ssrf">🔄 SSRF</option>
+          <option value="lfi">📂 LFI</option>
+          <option value="xxe">📋 XXE</option>
+          <option value="jwt">🎫 JWT Attacks</option>
+          <option value="csrf">🔁 CSRF</option>
+          <option value="ssti">🧩 SSTI</option>
+          <option value="upload">📤 File Upload</option>
+          <option value="cmd">⚙️ Command Injection</option>
+          <option value="deser">📦 Deserialization</option>
+          <option value="cors">🌐 CORS Misconfig</option>
+          <option value="auth">🔐 Auth Bypass</option>
+          <option value="privesc">⬆️ Privilege Escalation</option>
+          <option value="path">🗂 Path Traversal</option>
+          <option value="open_redirect">↪️ Open Redirect</option>
+          <option value="subdomain">🔭 Subdomain Takeover</option>
+          <option value="cache">💾 Web Cache Poisoning</option>
+          <option value="smuggling">📦 HTTP Request Smuggling</option>
+          <option value="oauth">🔑 OAuth Vulnerabilities</option>
+          <option value="graphql">📊 GraphQL Injection</option>
+        </select>
+      </div>
+      <div class="fg"><label class="lbl">// السياق / التفاصيل</label>
+        <textarea id="exCtx" style="height:40px;" placeholder="مثال: SQLi في حقل username، MySQL..."></textarea>
+      </div>
+    </div>
+    <div class="fg">
+      <div class="qrow">
+        <button class="sbtn" onclick="setEx('اشرح خطوات الاستغلال من الصفر')">📖 خطوات</button>
+        <button class="sbtn" onclick="setEx('أعطني payloads جاهزة للاستغلال')">💣 Payloads</button>
+        <button class="sbtn" onclick="setEx('ما هي الأدوات وأوامرها الكاملة؟')">🛠 أدوات</button>
+        <button class="sbtn" onclick="setEx('كيف أتجاوز WAF والفلاتر؟')">🚧 تجاوز WAF</button>
+        <button class="sbtn" onclick="setEx('كيف أصل من هذه الثغرة إلى shell؟')">🐚 Shell</button>
+        <button class="sbtn" onclick="setEx('كيف أكتب Bug Bounty report احترافي؟')">💰 Bug Bounty</button>
+        <button class="sbtn" onclick="setEx('ما أقصى استغلال ممكن؟')">⚡ Max Impact</button>
+        <button class="sbtn" onclick="setEx('أعطني مثال كامل من البداية للنهاية')">🎯 مثال كامل</button>
+      </div>
+    </div>
+    <div class="fg"><label class="lbl">// سؤال إضافي</label><textarea id="exQ" style="height:65px;" placeholder="اكتب سؤالك المحدد..."></textarea></div>
+    <button class="abtn red" id="exBtn" onclick="runExploit()">💥 شرح الاستغلال الكامل</button>
+  </div>
+  <div class="ra" id="r-exploit">
+    <div class="rh"><span class="rtl" style="color:var(--a4);">// دليل الاستغلال</span><div style="display:flex;gap:6px;"><button class="sbtn" onclick="cp('o-exploit')">📋 نسخ</button><button class="sbtn" onclick="ex('o-exploit','exploit')">💾 تصدير</button></div></div>
+    <div class="pg" id="pg-exploit"><div class="pb"><div class="pf"></div></div></div>
+    <div class="mdo" id="o-exploit"></div>
+  </div>
+</div>
+
+<!-- ═══ TAB: SOCIAL ═══ -->
+<div id="p-social" class="pn">
+  <div class="card">
+    <div class="ct">📱 ثغرات منصات التواصل الاجتماعي</div>
+    <div class="tipr"><strong style="color:var(--a4);">⚠️ مهم جداً:</strong> هذه معلومات تعليمية فقط. اختبار حسابات الآخرين بدون إذن مخالف للقانون ويعرضك للمساءلة الجنائية. استخدم فقط على حساباتك الشخصية أو في برامج Bug Bounty الرسمية.</div>
+    <div class="fg">
+      <label class="lbl">// اختر المنصة</label>
+      <div class="social-grid">
+        <div class="soc-card soc-fb" onclick="setSocial('facebook')"><div style="font-size:2rem;">📘</div><div style="font-size:12px;font-weight:700;color:#1877f2;margin-top:4px;">Facebook</div><div style="font-size:10px;color:var(--dm);">Meta Platform</div></div>
+        <div class="soc-card soc-ig" onclick="setSocial('instagram')"><div style="font-size:2rem;">📸</div><div style="font-size:12px;font-weight:700;color:#e1306c;margin-top:4px;">Instagram</div><div style="font-size:10px;color:var(--dm);">Meta Platform</div></div>
+        <div class="soc-card soc-tw" onclick="setSocial('twitter')"><div style="font-size:2rem;">🐦</div><div style="font-size:12px;font-weight:700;color:#1da1f2;margin-top:4px;">X / Twitter</div><div style="font-size:10px;color:var(--dm);">X Corp</div></div>
+        <div class="soc-card soc-yt" onclick="setSocial('youtube')"><div style="font-size:2rem;">▶️</div><div style="font-size:12px;font-weight:700;color:#ff0000;margin-top:4px;">YouTube</div><div style="font-size:10px;color:var(--dm);">Google Platform</div></div>
+        <div class="soc-card soc-tt" onclick="setSocial('tiktok')"><div style="font-size:2rem;">🎵</div><div style="font-size:12px;font-weight:700;color:#fff;margin-top:4px;">TikTok</div><div style="font-size:10px;color:var(--dm);">ByteDance</div></div>
+        <div class="soc-card" style="background:rgba(0,229,255,.05);border-color:rgba(0,229,255,.2);" onclick="setSocial('general')"><div style="font-size:2rem;">🌐</div><div style="font-size:12px;font-weight:700;color:var(--a);margin-top:4px;">عام</div><div style="font-size:10px;color:var(--dm);">جميع المنصات</div></div>
+      </div>
+    </div>
+    <div class="fg">
+      <label class="lbl">// نوع الاستفسار</label>
+      <select id="socType">
+        <option value="vulns">🔍 الثغرات المعروفة في المنصة</option>
+        <option value="account_sec">🔐 تأمين الحساب وكشف الاختراق</option>
+        <option value="osint">🔭 OSINT وجمع المعلومات</option>
+        <option value="phishing">🎣 تقنيات Phishing المستخدمة ضد المنصة</option>
+        <option value="api_abuse">🔌 إساءة استخدام الـ API</option>
+        <option value="privacy">🕵️ ثغرات الخصوصية وتسريب البيانات</option>
+        <option value="bypass">🚧 تجاوز قيود المنصة</option>
+        <option value="bug_bounty">💰 Bug Bounty في المنصة</option>
+        <option value="takeover">👤 Account Takeover Attack</option>
+        <option value="2fa_bypass">📱 تجاوز المصادقة الثنائية (2FA)</option>
+      </select>
+    </div>
+    <div class="fg"><label class="lbl">// سؤالك</label><textarea id="socQ" style="height:70px;" placeholder="مثال: ما هي ثغرات Facebook المعروفة في Bug Bounty؟"></textarea></div>
+    <div class="fg">
+      <div class="qrow">
+        <button class="sbtn" onclick="ssq('ما هي أشهر الثغرات المكتشفة في Bug Bounty لهذه المنصة؟')">💰 Bug Bounty</button>
+        <button class="sbtn" onclick="ssq('كيف أكتشف إذا تم اختراق حسابي؟')">🔍 كشف اختراق</button>
+        <button class="sbtn" onclick="ssq('ما هي تقنيات OSINT لجمع معلومات من هذه المنصة؟')">🔭 OSINT</button>
+        <button class="sbtn" onclick="ssq('كيف تعمل هجمات Phishing على هذه المنصة؟')">🎣 Phishing</button>
+        <button class="sbtn" onclick="ssq('ما هي ثغرات Account Takeover المعروفة؟')">👤 Takeover</button>
+        <button class="sbtn" onclick="ssq('كيف أؤمن حسابي بشكل كامل؟')">🛡️ تأمين</button>
+      </div>
+    </div>
+    <button class="abtn pur" id="socBtn" onclick="runSocial()">📱 تحليل الأمان</button>
+  </div>
+  <div class="ra" id="r-social">
+    <div class="rh"><span class="rtl" style="color:var(--a5);">// تحليل أمان المنصة</span><div style="display:flex;gap:6px;"><button class="sbtn" onclick="cp('o-social')">📋 نسخ</button><button class="sbtn" onclick="ex('o-social','social')">💾 تصدير</button></div></div>
+    <div class="pg" id="pg-social"><div class="pb"><div class="pf"></div></div></div>
+    <div class="mdo" id="o-social"></div>
+  </div>
+</div>
+
+<!-- ═══ TAB: LINUX ═══ -->
+<div id="p-linux" class="pn">
+  <div class="card">
+    <div class="ct">🐧 أدوات لينكس للهكر الأخلاقي</div>
+    <div class="fg">
+      <label class="lbl">// اختر الأداة أو الفئة</label>
+      <div class="tool-grid">
+        <div class="tool-card" onclick="setLinux('nmap')"><div class="tool-icon">🔍</div><div class="tool-name">Nmap</div><div class="tool-desc">فحص الشبكات والمنافذ</div></div>
+        <div class="tool-card" onclick="setLinux('metasploit')"><div class="tool-icon">💣</div><div class="tool-name">Metasploit</div><div class="tool-desc">إطار الاستغلال</div></div>
+        <div class="tool-card" onclick="setLinux('burpsuite')"><div class="tool-icon">🔧</div><div class="tool-name">Burp Suite</div><div class="tool-desc">اختبار الويب</div></div>
+        <div class="tool-card" onclick="setLinux('sqlmap')"><div class="tool-icon">💉</div><div class="tool-name">SQLmap</div><div class="tool-desc">اكتشاف SQLi</div></div>
+        <div class="tool-card" onclick="setLinux('nikto')"><div class="tool-icon">🕷</div><div class="tool-name">Nikto</div><div class="tool-desc">فحص ثغرات الويب</div></div>
+        <div class="tool-card" onclick="setLinux('hydra')"><div class="tool-icon">🐉</div><div class="tool-name">Hydra</div><div class="tool-desc">Brute Force</div></div>
+        <div class="tool-card" onclick="setLinux('john')"><div class="tool-icon">🔑</div><div class="tool-name">John The Ripper</div><div class="tool-desc">كسر كلمات المرور</div></div>
+        <div class="tool-card" onclick="setLinux('hashcat')"><div class="tool-icon">⚡</div><div class="tool-name">Hashcat</div><div class="tool-desc">كسر الهاشات GPU</div></div>
+        <div class="tool-card" onclick="setLinux('wireshark')"><div class="tool-icon">📡</div><div class="tool-name">Wireshark</div><div class="tool-desc">تحليل الحزم</div></div>
+        <div class="tool-card" onclick="setLinux('aircrack')"><div class="tool-icon">📶</div><div class="tool-name">Aircrack-ng</div><div class="tool-desc">اختبار WiFi</div></div>
+        <div class="tool-card" onclick="setLinux('gobuster')"><div class="tool-icon">📂</div><div class="tool-name">Gobuster</div><div class="tool-desc">Directory Bruteforce</div></div>
+        <div class="tool-card" onclick="setLinux('subfinder')"><div class="tool-icon">🔭</div><div class="tool-name">Subfinder</div><div class="tool-desc">Subdomain Enum</div></div>
+        <div class="tool-card" onclick="setLinux('ffuf')"><div class="tool-icon">🎯</div><div class="tool-name">FFUF</div><div class="tool-desc">Web Fuzzer</div></div>
+        <div class="tool-card" onclick="setLinux('netcat')"><div class="tool-icon">🔗</div><div class="tool-name">Netcat</div><div class="tool-desc">Swiss Army Knife</div></div>
+        <div class="tool-card" onclick="setLinux('responder')"><div class="tool-icon">🎭</div><div class="tool-name">Responder</div><div class="tool-desc">LLMNR Poisoning</div></div>
+        <div class="tool-card" onclick="setLinux('mimikatz')"><div class="tool-icon">🔓</div><div class="tool-name">Mimikatz</div><div class="tool-desc">Credential Dump</div></div>
+        <div class="tool-card" onclick="setLinux('shodan')"><div class="tool-icon">🌍</div><div class="tool-name">Shodan CLI</div><div class="tool-desc">IoT Scanner</div></div>
+        <div class="tool-card" onclick="setLinux('theHarvester')"><div class="tool-icon">🌾</div><div class="tool-name">theHarvester</div><div class="tool-desc">OSINT جمع</div></div>
+        <div class="tool-card" onclick="setLinux('crackmapexec')"><div class="tool-icon">🗺</div><div class="tool-name">CrackMapExec</div><div class="tool-desc">AD Pentesting</div></div>
+        <div class="tool-card" onclick="setLinux('linpeas')"><div class="tool-icon">🦚</div><div class="tool-name">LinPEAS</div><div class="tool-desc">Linux PrivEsc</div></div>
+        <div class="tool-card" onclick="setLinux('nuclei')"><div class="tool-icon">☢️</div><div class="tool-name">Nuclei</div><div class="tool-desc">Vulnerability Scanner</div></div>
+        <div class="tool-card" onclick="setLinux('amass')"><div class="tool-icon">🌐</div><div class="tool-name">Amass</div><div class="tool-desc">Attack Surface</div></div>
+        <div class="tool-card" onclick="setLinux('empire')"><div class="tool-icon">👑</div><div class="tool-name">Empire</div><div class="tool-desc">Post-Exploitation</div></div>
+        <div class="tool-card" onclick="setLinux('beef')"><div class="tool-icon">🥩</div><div class="tool-name">BeEF</div><div class="tool-desc">Browser Exploitation</div></div>
+      </div>
+    </div>
+    <div class="fg"><label class="lbl">// الأداة المختارة</label><input type="text" id="linuxTool" placeholder="أو اكتب اسم الأداة يدوياً..."></div>
+    <div class="fg"><label class="lbl">// نوع المساعدة</label>
+      <select id="linuxHelp">
+        <option value="install">📦 طريقة التثبيت الكاملة</option>
+        <option value="usage">🚀 طريقة الاستخدام مع أمثلة</option>
+        <option value="commands">⌨️ أهم الأوامر والمعاملات</option>
+        <option value="cheatsheet">📋 Cheat Sheet كامل</option>
+        <option value="advanced">⚡ استخدامات متقدمة</option>
+        <option value="combine">🔗 الجمع مع أدوات أخرى</option>
+      </select>
+    </div>
+    <div class="fg"><label class="lbl">// سؤالك المحدد</label><textarea id="linuxQ" style="height:65px;" placeholder="مثال: كيف أستخدم nmap لفحص شبكة كاملة وكشف الأنظمة؟"></textarea></div>
+    <button class="abtn grn" id="linBtn" onclick="runLinux()">🐧 الحصول على المساعدة</button>
+  </div>
+  <div class="ra" id="r-linux">
+    <div class="rh"><span class="rtl" style="color:var(--a3);">// دليل الأداة</span><div style="display:flex;gap:6px;"><button class="sbtn" onclick="cp('o-linux')">📋 نسخ</button><button class="sbtn" onclick="ex('o-linux','linux')">💾 تصدير</button></div></div>
+    <div class="pg" id="pg-linux"><div class="pb"><div class="pf"></div></div></div>
+    <div class="mdo" id="o-linux"></div>
+  </div>
+</div>
+
+<!-- ═══ TAB: PENTEST ═══ -->
+<div id="p-pentest" class="pn">
+  <div class="card">
+    <div class="ct">⚡ مساعد الاختبار الأمني</div>
+    <div class="tip"><strong style="color:var(--a);">⚠️ أخلاقي:</strong> للتعلم وبيئات CTF / Bug Bounty / الأنظمة المصرح باختبارها.</div>
+    <div class="g2">
+      <div class="fg"><label class="lbl">// التخصص</label>
+        <select id="ptCat">
+          <option value="methodology">📋 منهجية الاختبار (PTES/OWASP)</option>
+          <option value="recon">🔭 الاستطلاع والـ OSINT</option>
+          <option value="web">🌐 استغلال ثغرات الويب</option>
+          <option value="payload">💣 صياغة Payloads</option>
+          <option value="bypass">🚧 تجاوز الفلاتر والـ WAF</option>
+          <option value="privesc">⬆️ تصعيد الصلاحيات</option>
+          <option value="postex">🎯 Post-Exploitation</option>
+          <option value="ctf">🏆 حل CTF Challenges</option>
+          <option value="bounty">💰 Bug Bounty Strategy</option>
+          <option value="network">🌐 فحص الشبكات</option>
+          <option value="mobile">📱 Mobile App Pentesting</option>
+          <option value="cloud">☁️ Cloud Security (AWS/Azure/GCP)</option>
+          <option value="ad">🏢 Active Directory Attacks</option>
+          <option value="wireless">📶 Wireless Security</option>
+          <option value="tools">🛠️ أدوات الاختبار</option>
+        </select>
+      </div>
+      <div class="fg"><label class="lbl">// سؤالك</label>
+        <textarea id="ptQ" style="height:40px;" placeholder="مثال: كيف أختبر IDOR في API؟"></textarea>
+      </div>
+    </div>
+    <div class="fg">
+      <div class="qrow">
+        <button class="sbtn" onclick="spt('اشرح منهجية PTES للاختبار الأمني خطوة بخطوة')">📋 PTES</button>
+        <button class="sbtn" onclick="spt('كيف أستخدم Burp Suite للعثور على الثغرات؟')">🔧 Burp</button>
+        <button class="sbtn" onclick="spt('تقنيات Subdomain Enumeration الفعالة؟')">🔭 Recon</button>
+        <button class="sbtn" onclick="spt('هجمات JWT Token وكيف أستغلها؟')">🎫 JWT</button>
+        <button class="sbtn" onclick="spt('كيف أختبر SSRF vulnerabilities؟')">🔄 SSRF</button>
+        <button class="sbtn" onclick="spt('استراتيجيات Bug Bounty الناجحة؟')">💰 Bounty</button>
+        <button class="sbtn" onclick="spt('تقنيات Linux Privilege Escalation')">⬆️ PrivEsc</button>
+        <button class="sbtn" onclick="spt('نصائح حل تحديات Web CTF')">🏆 CTF</button>
+        <button class="sbtn" onclick="spt('كيف أفحص تطبيق Mobile Android/iOS؟')">📱 Mobile</button>
+        <button class="sbtn" onclick="spt('هجمات Active Directory الشائعة')">🏢 AD</button>
+      </div>
+    </div>
+    <button class="abtn" id="ptBtn" onclick="runPentest()">⚡ الحصول على المساعدة</button>
+  </div>
+  <div class="ra" id="r-pentest">
+    <div class="rh"><span class="rtl">// المساعدة الأمنية</span><div style="display:flex;gap:6px;"><button class="sbtn" onclick="cp('o-pentest')">📋 نسخ</button><button class="sbtn" onclick="ex('o-pentest','pentest')">💾 تصدير</button></div></div>
+    <div class="pg" id="pg-pentest"><div class="pb"><div class="pf"></div></div></div>
+    <div class="mdo" id="o-pentest"></div>
+  </div>
+</div>
+
+<!-- ═══ TAB: REPORT ═══ -->
+<div id="p-report" class="pn">
+  <div class="card">
+    <div class="ct">📋 مولّد التقارير الأمنية</div>
+    <div class="g2">
+      <div class="fg"><label class="lbl">// اسم الهدف</label><input type="text" id="rTarget" placeholder="MyApp v2.1"></div>
+      <div class="fg"><label class="lbl">// نوع التقرير</label>
+        <select id="rType">
+          <option>تقرير اختبار اختراق شامل</option>
+          <option>تقرير Bug Bounty</option>
+          <option>ملخص تنفيذي للثغرات</option>
+          <option>تقرير مراجعة الكود الأمنية</option>
+          <option>تقرير تدقيق Smart Contract</option>
+          <option>تقرير فحص شبكة</option>
+          <option>تقرير Red Team</option>
+        </select>
+      </div>
+    </div>
+    <div class="fg"><label class="lbl">// الثغرات المكتشفة</label>
+      <textarea id="rVulns" style="height:120px;" placeholder="- SQL Injection في /api/login (Critical)&#10;- Stored XSS في حقل التعليقات (High)&#10;- IDOR في /api/user/{id} (Medium)&#10;- Missing rate limiting (Low)"></textarea>
+    </div>
+    <div class="fg"><label class="lbl">// ملاحظات إضافية</label><textarea id="rNotes" style="height:65px;" placeholder="بيئة الاختبار، الأدوات المستخدمة..."></textarea></div>
+    <button class="abtn" id="rBtn" onclick="runReport()">📋 توليد التقرير الاحترافي</button>
+  </div>
+  <div class="ra" id="r-report">
+    <div class="rh"><span class="rtl">// التقرير الأمني</span><div style="display:flex;gap:6px;"><button class="sbtn" onclick="cp('o-report')">📋 نسخ</button><button class="sbtn" onclick="ex('o-report','report')">💾 تصدير</button></div></div>
+    <div class="pg" id="pg-report"><div class="pb"><div class="pf"></div></div></div>
+    <div class="mdo" id="o-report"></div>
+  </div>
+</div>
+
+<!-- ═══ TAB: HISTORY ═══ -->
+<div id="p-hist" class="pn">
+  <div class="card">
+    <div class="ct">📜 سجل العمليات</div>
+    <div class="sb"><div class="sd"></div><span id="hCnt">0 عملية</span></div>
+    <div class="hl" id="hList"><div style="text-align:center;color:var(--dm);padding:18px;font-size:12px;">لا توجد عمليات بعد</div></div>
+    <div style="height:1px;background:var(--br);margin:12px 0;"></div>
+    <button class="abtn red" onclick="clearHist()">🗑️ مسح السجل</button>
+  </div>
+</div>
+
+</div><!-- /wrap -->
+<div class="notif" id="notif">✅ تم النسخ</div>
+
+<script>
+// ══════════════════════════════════════
+//  CONFIG & STATE
+// ══════════════════════════════════════
+let USER_KEY = localStorage.getItem("or_key") || "";
+let hist = [];
+let selSocial = "facebook";
+
+const DORK_DATA = {
+  login:      {hint:"يبحث عن صفحات Login مكشوفة", q:'intitle:"Login" inurl:"/login" -site:google.com'},
+  admin:      {hint:"يبحث عن لوحات Admin مكشوفة",  q:'intitle:"Admin Panel" inurl:"/admin"'},
+  sqli:       {hint:"نقاط حقن SQL محتملة",          q:'inurl:".php?id=" OR inurl:"?cat=" OR inurl:"?page="'},
+  upload:     {hint:"صفحات رفع ملفات مكشوفة",       q:'intitle:"File Upload" inurl:"/upload"'},
+  config:     {hint:"ملفات .env و config مكشوفة",   q:'filetype:env "DB_PASSWORD" OR filetype:cfg "password"'},
+  backup:     {hint:"ملفات backup مكشوفة",           q:'filetype:sql "INSERT INTO" OR filetype:bak inurl:"/backup"'},
+  camera:     {hint:"كاميرات IP مكشوفة",            q:'intitle:"IP Camera" inurl:"/view.shtml"'},
+  db:         {hint:"قواعد بيانات و phpMyAdmin",     q:'intitle:"phpMyAdmin" inurl:"/phpmyadmin"'},
+  api:        {hint:"API Keys مكشوفة في GitHub",    q:'filetype:js "apiKey" OR filetype:json "api_key" site:github.com'},
+  error:      {hint:"صفحات خطأ تكشف معلومات",       q:'intext:"stack trace" OR intext:"SQL syntax" intext:"Warning"'},
+  phpmyadmin: {hint:"phpMyAdmin مكشوف للعموم",       q:'intitle:"phpMyAdmin" "Welcome to phpMyAdmin"'},
+};
+
+// ══════════════════════════════════════
+//  API KEY
+// ══════════════════════════════════════
+window.onload = function() {
+  if (USER_KEY) {
+    document.getElementById("apiKey").value = USER_KEY;
+    updateKeyStatus();
+  }
+  updateDork();
+};
+
+function saveKey() {
+  USER_KEY = document.getElementById("apiKey").value.trim();
+  if (USER_KEY) { localStorage.setItem("or_key", USER_KEY); updateKeyStatus(); }
+}
+
+function updateKeyStatus() {
+  const el = document.getElementById("kStat");
+  if (USER_KEY) { el.textContent = "✅ " + USER_KEY.slice(0,10) + "..."; el.style.color = "#39ff14"; }
+  else { el.textContent = "⚠️ أدخل الـ Key"; el.style.color = "#ffb800"; }
+}
+
+// ══════════════════════════════════════
+//  TABS
+// ══════════════════════════════════════
+function T(id, el) {
+  document.querySelectorAll(".pn").forEach(p => p.classList.remove("on"));
+  document.querySelectorAll(".tb").forEach(b => b.classList.remove("on"));
+  document.getElementById("p-" + id).classList.add("on");
+  el.classList.add("on");
+}
+
+// ══════════════════════════════════════
+//  FILE
+// ══════════════════════════════════════
+let fileTxt = "";
+function loadFile(inp) {
+  const f = inp.files[0]; if (!f) return;
+  const fr = new FileReader();
+  fr.onload = e => {
+    fileTxt = e.target.result;
+    document.getElementById("fInfo").style.display = "block";
+    document.getElementById("fInfo").textContent = "✅ " + f.name + " (" + (f.size/1024).toFixed(1) + " KB)";
+  };
+  fr.readAsText(f);
+}
+
+// ══════════════════════════════════════
+//  CORE API
+// ══════════════════════════════════════
+async function callAI(sys, usr) {
+  if (!USER_KEY) {
+    USER_KEY = prompt("🔑 أدخل OpenRouter API Key:");
+    if (!USER_KEY) throw new Error("لم يتم إدخال API Key");
+    localStorage.setItem("or_key", USER_KEY);
+    document.getElementById("apiKey").value = USER_KEY;
+    updateKeyStatus();
+  }
+  const model = document.getElementById("mdlSel").value;
+  const r = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": "Bearer " + USER_KEY,
+      "HTTP-Referer": location.href,
+      "X-Title": "HERMES Ethical Toolkit"
+    },
+    body: JSON.stringify({
+      model,
+      max_tokens: 3500,
+      messages: [
+        { role: "system", content: sys },
+        { role: "user",   content: usr }
+      ]
+    })
+  });
+  const j = await r.json();
+  if (!r.ok || j.error) {
+    if (r.status === 401) { USER_KEY = ""; localStorage.removeItem("or_key"); }
+    throw new Error(j?.error?.message || "HTTP " + r.status);
+  }
+  return j.choices[0].message.content;
+}
+
+// ══════════════════════════════════════
+//  UI HELPERS
+// ══════════════════════════════════════
+function setBtn(id, loading, orig) {
+  const b = document.getElementById(id); if (!b) return;
+  b.disabled = loading;
+  b.textContent = loading ? "⏳ جارٍ المعالجة..." : orig;
+}
+
+function showLoad(rid, oid, pgid) {
+  document.getElementById(rid).style.display = "block";
+  document.getElementById(pgid).style.display = "block";
+  document.getElementById(oid).innerHTML = '<span style="color:var(--dm);font-family:monospace;font-size:12px;">جارٍ التحليل...</span>';
+}
+
+function showRes(rid, oid, pgid, txt) {
+  document.getElementById(rid).style.display = "block";
+  document.getElementById(pgid).style.display = "none";
+  document.getElementById(oid).innerHTML = mdRender(txt);
+  try { hljs.highlightAll(); } catch(e) {}
+  document.getElementById(rid).scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function addHist(type, txt) {
+  const t = new Date().toLocaleTimeString("ar-EG", {hour:"2-digit",minute:"2-digit"});
+  hist.unshift({ type, txt: (txt||"").slice(0,50), t });
+  renderHist();
+}
+
+function renderHist() {
+  document.getElementById("hCnt").textContent = hist.length + " عملية";
+  const hl = document.getElementById("hList");
+  if (!hist.length) { hl.innerHTML = '<div style="text-align:center;color:var(--dm);padding:18px;font-size:12px;">لا توجد عمليات بعد</div>'; return; }
+  hl.innerHTML = hist.map(h => `<div class="hi"><span class="ht">${h.type}</span><span class="hx">${h.txt}</span><span class="hm">${h.t}</span></div>`).join("");
+}
+
+function clearHist() { hist = []; renderHist(); }
+
+function cp(id) {
+  navigator.clipboard.writeText(document.getElementById(id).innerText).then(() => {
+    const n = document.getElementById("notif"); n.classList.add("show");
+    setTimeout(() => n.classList.remove("show"), 2000);
+  });
+}
+
+function ex(id, name) {
+  const b = new Blob([document.getElementById(id).innerText], {type:"text/markdown"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(b);
+  a.download = "hermes-" + name + "-" + Date.now() + ".md"; a.click();
+}
+
+// ══════════════════════════════════════
+//  MARKDOWN RENDERER
+// ══════════════════════════════════════
+function esc(s) { return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+function mdRender(t) {
+  t = t.replace(/```(\w*)\n?([\s\S]*?)```/g, (_,l,c) =>
+    `<pre><code class="language-${l||"plaintext"}">${esc(c.trim())}</code></pre>`);
+  t = t.replace(/`([^`]+)`/g, "<code>$1</code>");
+  t = t.replace(/^### (.+)$/gm,"<h3>$1</h3>");
+  t = t.replace(/^## (.+)$/gm,"<h2>$1</h2>");
+  t = t.replace(/^# (.+)$/gm,"<h1>$1</h1>");
+  t = t.replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>");
+  t = t.replace(/\*(.+?)\*/g,"<em>$1</em>");
+  t = t.replace(/^---$/gm,"<hr/>");
+  t = t.replace(/^> (.+)$/gm,"<blockquote>$1</blockquote>");
+  t = t.replace(/^[-*] (.+)$/gm,"<li>$1</li>");
+  t = t.replace(/^\d+\. (.+)$/gm,"<li>$1</li>");
+  t = t.replace(/\n\n/g,"</p><p>");
+  return "<p>" + t + "</p>";
+}
+
+// ══════════════════════════════════════
+//  QUICK SETTERS
+// ══════════════════════════════════════
+function sq(t)  { document.getElementById("cInp").value = t; }
+function spt(t) { document.getElementById("ptQ").value = t; }
+function setEx(t) { document.getElementById("exQ").value = t; }
+function ssq(t) { document.getElementById("socQ").value = t; }
+
+function setSocial(platform) {
+  selSocial = platform;
+  document.querySelectorAll(".soc-card").forEach(c => c.style.outline = "none");
+  event.currentTarget.style.outline = "2px solid var(--a)";
+  const labels = {facebook:"Facebook",instagram:"Instagram",twitter:"X/Twitter",youtube:"YouTube",tiktok:"TikTok",general:"عام"};
+  document.getElementById("socQ").placeholder = "مثال: ما هي ثغرات " + (labels[platform]||platform) + " المعروفة؟";
+}
+
+function setLinux(tool) {
+  document.getElementById("linuxTool").value = tool;
+  document.querySelectorAll(".tool-card").forEach(c => c.style.outline = "none");
+  event.currentTarget.style.outline = "2px solid var(--a3)";
+}
+
+// ══════════════════════════════════════
+//  DORK
+// ══════════════════════════════════════
+function updateDork() {
+  const t = document.getElementById("sType").value;
+  const d = DORK_DATA[t];
+  document.getElementById("dorkHint").textContent = d ? "💡 " + d.hint : "";
+  document.getElementById("dorkDiv").style.display = t === "dork" ? "block" : "none";
+}
+
+function openDork() {
+  const t = document.getElementById("sType").value;
+  const domain = document.getElementById("sDomain").value.trim();
+  let dork = t === "dork" ? document.getElementById("dorkInp").value.trim() : (DORK_DATA[t]?.q || "");
+  if (domain) dork += " " + (domain.startsWith("site:") ? domain : "site:" + domain);
+  if (!dork) { alert("أدخل Dork أو اختر نوع بحث!"); return; }
+  window.open("https://www.google.com/search?q=" + encodeURIComponent(dork), "_blank");
+}
+
+// ══════════════════════════════════════
+//  RUN FUNCTIONS
+// ══════════════════════════════════════
+
+// ── CODE REVIEW
+async function runCode() {
+  const code = fileTxt || document.getElementById("dcCode").value;
+  const ins  = document.getElementById("cInp").value;
+  const type = document.getElementById("atype").value;
+  if (!code && !ins) { alert("يرجى رفع ملف أو كتابة سؤالك!"); return; }
+  setBtn("cBtn", true); showLoad("r-code","o-code","pg-code");
+  const typeMap = {general:"تحليل شامل",security:"فحص أمني عميق شامل",owasp:"فحص OWASP Top 10",secrets:"كشف API keys والأسرار",injection:"فحص SQL/XSS/Command Injection",auth:"فحص المصادقة والتفويض",crypto:"فحص التشفير",logic:"أخطاء المنطق التجاري",explain:"شرح الكود",improve:"تحسين وإعادة هيكلة"};
+  const sys = "أنت محلل أمني خبير. تحلل الكود بدقة وتقدم تقريراً احترافياً بالعربية مع المصطلحات التقنية بالإنجليزية. لكل ثغرة: الاسم، الخطورة (Critical/High/Medium/Low)، الوصف، السطر المتأثر، مثال استغلال تعليمي، والتوصية. استخدم Markdown.";
+  const usr = `نوع التحليل: ${typeMap[type]||type}\n${code?"الكود:\n```\n"+code+"\n```\n":""}${ins?"تعليمات: "+ins:""}`;
+  try { const r = await callAI(sys,usr); showRes("r-code","o-code","pg-code",r); addHist("CODE",ins||type); }
+  catch(e) { showRes("r-code","o-code","pg-code","❌ خطأ: "+e.message); }
+  finally { setBtn("cBtn",false,"🔍 تشغيل التحليل الأمني"); }
+}
+
+// ── VULN SCAN
+async function runVuln() {
+  const code = document.getElementById("vCode").value;
+  if (!code) { alert("يرجى إدخال الكود!"); return; }
+  const vulns = Array.from(document.querySelectorAll(".ckl input:checked")).map(c=>c.nextElementSibling.textContent);
+  setBtn("vBtn",true); showLoad("r-vuln","o-vuln","pg-vuln");
+  const sys = "أنت خبير أمن تطبيقات. قدم تقريراً مفصلاً بـ Markdown يشمل: اسم الثغرة، رقم CWE، درجة CVSS، الكود المتأثر، خطوات الاستغلال، والتوصية. رتب حسب الخطورة.";
+  const usr = `افحص عن: ${vulns.join(", ")}\nالتطبيق: ${document.getElementById("appT").value} | اللغة: ${document.getElementById("langT").value}\n\`\`\`\n${code}\n\`\`\``;
+  try { const r = await callAI(sys,usr); showRes("r-vuln","o-vuln","pg-vuln",r); addHist("VULN",document.getElementById("appT").value); }
+  catch(e) { showRes("r-vuln","o-vuln","pg-vuln","❌ خطأ: "+e.message); }
+  finally { setBtn("vBtn",false,"🛡️ بدء الفحص الأمني"); }
+}
+
+// ── URL SCAN
+async function runUrl() {
+  const url = document.getElementById("urlInp").value.trim();
+  if (!url) { alert("يرجى إدخال رابط!"); return; }
+  const checks = Array.from(document.querySelectorAll("#p-url .ckl input:checked")).map(c=>c.nextElementSibling.textContent);
+  const extra = document.getElementById("urlExtra").value;
+  setBtn("urlBtn",true); showLoad("r-url","o-url","pg-url");
+  const sys = "أنت خبير أمن ويب. قدم تحليلاً أمنياً معلوماتياً شاملاً مع أوامر فحص جاهزة. استخدم Markdown.";
+  const usr = `الموقع: ${url}\nالفحوصات: ${checks.join(" | ")}\n${extra?"معلومات: "+extra:""}\n\nقدم: معلومات Domain، تحليل كل فحص، أوامر جاهزة (nmap/curl/nikto/dig)، نقاط الضعف المحتملة، توصيات.`;
+  try { const r = await callAI(sys,usr); showRes("r-url","o-url","pg-url",r); addHist("URL",url); }
+  catch(e) { showRes("r-url","o-url","pg-url","❌ خطأ: "+e.message); }
+  finally { setBtn("urlBtn",false,"🌐 بدء فحص الموقع"); }
+}
+
+// ── SEARCH / DORK
+async function runSearch() {
+  const t = document.getElementById("sType").value;
+  const domain = document.getElementById("sDomain").value.trim();
+  const q = document.getElementById("sQ").value;
+  setBtn("sBtn",true); showLoad("r-search","o-search","pg-search");
+  const sys = "أنت خبير OSINT وGoogle Dorking. قدم تحليلاً شاملاً مع Dorks جاهزة، شرح كل Dork، أدوات إضافية، وأوامر Terminal. استخدم Markdown.";
+  const usr = `نوع البحث: ${t}\n${domain?"النطاق: "+domain:""}\n${DORK_DATA[t]?"Dork الأساسي: "+DORK_DATA[t].q:""}\n${q?"السؤال: "+q:""}\n\nقدم: 10+ Dorks جاهزة، شرح كل Dork، أدوات OSINT (Shodan/Censys/theHarvester)، أوامر Terminal، كيفية تحليل النتائج.`;
+  try { const r = await callAI(sys,usr); showRes("r-search","o-search","pg-search",r); addHist("DORK",t); }
+  catch(e) { showRes("r-search","o-search","pg-search","❌ خطأ: "+e.message); }
+  finally { setBtn("sBtn",false,"🔎 توليد Dorks وتحليل"); }
+}
+
+// ── EXPLOIT
+async function runExploit() {
+  const type = document.getElementById("exType").value;
+  const ctx  = document.getElementById("exCtx").value;
+  const q    = document.getElementById("exQ").value;
+  setBtn("exBtn",true); showLoad("r-exploit","o-exploit","pg-exploit");
+  const typeNames = {sqli:"SQL Injection",xss:"XSS",rce:"RCE",idor:"IDOR",ssrf:"SSRF",lfi:"LFI",xxe:"XXE",jwt:"JWT Attacks",csrf:"CSRF",ssti:"SSTI",upload:"File Upload",cmd:"Command Injection",deser:"Deserialization",cors:"CORS Misconfig",auth:"Auth Bypass",privesc:"Privilege Escalation",path:"Path Traversal",open_redirect:"Open Redirect",subdomain:"Subdomain Takeover",cache:"Cache Poisoning",smuggling:"HTTP Smuggling",oauth:"OAuth Vulns",graphql:"GraphQL Injection"};
+  const sys = "أنت خبير أمن هجومي متخصص في اختبار الاختراق الأخلاقي. تشرح استغلال الثغرات بشكل تفصيلي للأغراض التعليمية وCTF وBug Bounty. ردودك بالعربية مع المصطلحات التقنية بالإنجليزية. استخدم Markdown مع أكواد وأوامر حقيقية.";
+  const usr = `ثغرة: ${typeNames[type]||type}\n${ctx?"السياق: "+ctx:""}\n${q||"اشرح الاستغلال الكامل"}\n\nاشرح: 1-فهم الثغرة 2-اكتشافها 3-خطوات الاستغلال الكاملة 4-Payloads جاهزة 5-الأدوات وأوامرها 6-أقصى استغلال 7-تجاوز WAF 8-Bug Bounty Report`;
+  try { const r = await callAI(sys,usr); showRes("r-exploit","o-exploit","pg-exploit",r); addHist("EXPLOIT",typeNames[type]||type); }
+  catch(e) { showRes("r-exploit","o-exploit","pg-exploit","❌ خطأ: "+e.message); }
+  finally { setBtn("exBtn",false,"💥 شرح الاستغلال الكامل"); }
+}
+
+// ── SOCIAL MEDIA
+async function runSocial() {
+  const platform = selSocial;
+  const sType = document.getElementById("socType").value;
+  const q = document.getElementById("socQ").value;
+  setBtn("socBtn",true); showLoad("r-social","o-social","pg-social");
+  const platNames = {facebook:"Facebook (Meta)",instagram:"Instagram (Meta)",twitter:"X/Twitter",youtube:"YouTube (Google)",tiktok:"TikTok (ByteDance)",general:"منصات التواصل الاجتماعي"};
+  const sys = `أنت خبير أمن متخصص في أمان منصات التواصل الاجتماعي وBug Bounty. 
+تجيب بالعربية مع المصطلحات التقنية. كل المعلومات للاستخدام التعليمي وBug Bounty الرسمي فقط.
+استخدم Markdown للتنسيق.`;
+  const usr = `المنصة: ${platNames[platform]||platform}
+نوع الاستفسار: ${sType}
+${q?"السؤال: "+q:""}
+
+قدم تحليلاً شاملاً يتضمن:
+1. **الثغرات المعروفة والمكتشفة** في هذه المنصة (مع CVE إن وجد)
+2. **تقنيات Bug Bounty** الناجحة في هذه المنصة
+3. **أدوات OSINT** للبحث في هذه المنصة
+4. **نقاط الضعف الشائعة** في الـ API والمصادقة
+5. **كيفية تأمين الحساب** من هذه الهجمات
+6. **أمثلة حقيقية** من HackerOne وBugcrowd
+7. **أوامر وأدوات** للاختبار الأخلاقي`;
+  try { const r = await callAI(sys,usr); showRes("r-social","o-social","pg-social",r); addHist("SOCIAL",platNames[platform]); }
+  catch(e) { showRes("r-social","o-social","pg-social","❌ خطأ: "+e.message); }
+  finally { setBtn("socBtn",false,"📱 تحليل الأمان"); }
+}
+
+// ── LINUX TOOLS
+async function runLinux() {
+  const tool = document.getElementById("linuxTool").value.trim();
+  const help = document.getElementById("linuxHelp").value;
+  const q    = document.getElementById("linuxQ").value;
+  if (!tool) { alert("يرجى اختيار أداة أو كتابة اسمها!"); return; }
+  setBtn("linBtn",true); showLoad("r-linux","o-linux","pg-linux");
+  const sys = `أنت خبير لينكس وأمن متخصص في أدوات الهكر الأخلاقي. 
+تشرح الأدوات بالتفصيل مع أوامر جاهزة للتنفيذ. 
+ردودك بالعربية مع الأوامر بالإنجليزية. استخدم Markdown.`;
+  const usr = `الأداة: ${tool}
+نوع المساعدة: ${help}
+${q?"السؤال: "+q:""}
+
+قدم:
+## 1. نظرة عامة
+ما هي الأداة وما استخدامها؟
+
+## 2. التثبيت
+\`\`\`bash
+# Kali Linux
+sudo apt install ${tool}
+# أو طريقة التثبيت الصحيحة
+\`\`\`
+
+## 3. الاستخدام الأساسي
+أوامر جاهزة مع شرح كل معامل
+
+## 4. أمثلة عملية
+سيناريوهات حقيقية من Bug Bounty و CTF
+
+## 5. Cheat Sheet
+جدول بأهم الأوامر والمعاملات
+
+## 6. استخدامات متقدمة
+تقنيات احترافية
+
+## 7. الجمع مع أدوات أخرى
+Pipelines وسير العمل الكامل`;
+  try { const r = await callAI(sys,usr); showRes("r-linux","o-linux","pg-linux",r); addHist("LINUX",tool); }
+  catch(e) { showRes("r-linux","o-linux","pg-linux","❌ خطأ: "+e.message); }
+  finally { setBtn("linBtn",false,"🐧 الحصول على المساعدة"); }
+}
+
+// ── PENTEST
+async function runPentest() {
+  const q   = document.getElementById("ptQ").value;
+  const cat = document.getElementById("ptCat").value;
+  if (!q) { alert("يرجى كتابة سؤالك!"); return; }
+  setBtn("ptBtn",true); showLoad("r-pentest","o-pentest","pg-pentest");
+  const sys = "أنت مدرب أمني خبير. تجيب بعربية واضحة مع المصطلحات التقنية. قدم إجابات عملية مع أوامر وأمثلة. استخدم Markdown.";
+  const usr = `التخصص: ${cat}\nالسؤال: ${q}\n\nقدم إجابة شاملة مع أمثلة وأوامر عملية.`;
+  try { const r = await callAI(sys,usr); showRes("r-pentest","o-pentest","pg-pentest",r); addHist("PENTEST",q.slice(0,50)); }
+  catch(e) { showRes("r-pentest","o-pentest","pg-pentest","❌ خطأ: "+e.message); }
+  finally { setBtn("ptBtn",false,"⚡ الحصول على المساعدة"); }
+}
+
+// ── REPORT
+async function runReport() {
+  const vulns = document.getElementById("rVulns").value;
+  if (!vulns) { alert("يرجى إدخال الثغرات!"); return; }
+  setBtn("rBtn",true); showLoad("r-report","o-report","pg-report");
+  const sys = "أنت خبير أمني متخصص في كتابة تقارير احترافية. اكتب تقريراً كاملاً بالعربية مع المصطلحات التقنية. استخدم Markdown.";
+  const usr = `اكتب ${document.getElementById("rType").value} لـ: ${document.getElementById("rTarget").value||"التطبيق المستهدف"}\nالتاريخ: ${new Date().toLocaleDateString("ar-EG")}\nالثغرات:\n${vulns}\n${document.getElementById("rNotes").value?"ملاحظات: "+document.getElementById("rNotes").value:""}`;
+  try { const r = await callAI(sys,usr); showRes("r-report","o-report","pg-report",r); addHist("REPORT",document.getElementById("rType").value); }
+  catch(e) { showRes("r-report","o-report","pg-report","❌ خطأ: "+e.message); }
+  finally { setBtn("rBtn",false,"📋 توليد التقرير الاحترافي"); }
+}
+</script>
+</body>
+</html>
